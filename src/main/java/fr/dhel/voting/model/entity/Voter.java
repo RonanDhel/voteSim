@@ -59,7 +59,7 @@ public interface Voter {
 	 * Renseigne un vote et produit un bulletin de vote valide pour être
 	 * décompter via {@link VotingSystem#countVotes(List, Set)}.
 	 * 
-	 * @param builder
+	 * @param builder ballot builder
 	 * @return un bulletin de vote valide
 	 */
 	Ballot vote(final BallotBuilder builder);

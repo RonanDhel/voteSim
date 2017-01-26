@@ -42,7 +42,7 @@ public interface VotingSystem {
 	 * Si des votes font référence à des candidats non fournies, le comportement
 	 * n'est pas déterminé.
 	 * 
-	 * @param votes
+	 * @param votes liste des bulletins
 	 * @param candidateSet ensemble des candidats
 	 * @return le gagnant de l'élection
 	 */

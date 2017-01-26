@@ -15,8 +15,8 @@ import fr.dhel.voting.model.system.ballot.Ballot;
  * <p>
  * S'il y a <i>n</i> candidats, le candidat placé en tête gagnera <i>n</i>
  * points, le second <i>n - 1</i> et le dernier <i>1</i> point. <br />
- * Par exemple, avec 4 candidats A, B, C et D et un bulletin de vote A > B > D >
- * C, A gagne 4 points, B gagne 3 points, D 1 point et C 2 points.
+ * Par exemple, avec 4 candidats A, B, C et D et un bulletin de vote A &gt; B
+ * &gt; D &gt; C, A gagne 4 points, B gagne 3 points, D 1 point et C 2 points.
  * <p>
  * Ce système se comporte comme ceci :
  * <ul>

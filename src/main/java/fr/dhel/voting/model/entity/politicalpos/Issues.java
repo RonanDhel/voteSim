@@ -16,15 +16,16 @@ import lombok.experimental.ExtensionMethod;
 /**
  * Liste de points évalués sur l'échelle des réelles (positifs seulements). Ces
  * points permettent de simuler un ensemble d'interrogations/sujets et de placer
- * les {@link Candidate} et les {@link Voter} sur l'échiquier politique de
+ * les {@link fr.dhel.voting.model.entity.Candidate} et les
+ * {@link fr.dhel.voting.model.entity.Voter} sur l'échiquier politique de
  * manière plus fine qu'un schéma gauche/droite classique.
  * <p>
  * Ces listes peuvent être comparée entre elles en calculant leur distance, une
  * distance de 0 indiquant que les deux listes sont exactement pareilles.
  * <p>
- * Par exemple, si un ensemble de 3 sujets est évalué par une personne {0, 0.5, 2}
- * et qu'il y a 2 candidats {0, 1, 1} et {1, 2, 0}, le candidat qui sera le mieux évaluée
- * sera le premier.
+ * Par exemple, si un ensemble de 3 sujets est évalué par une personne {0, 0.5,
+ * 2} et qu'il y a 2 candidats {0, 1, 1} et {1, 2, 0}, le candidat qui sera le
+ * mieux évaluée sera le premier.
  * 
  * @author Ronan
  *
@@ -83,7 +84,7 @@ public class Issues implements Iterable<Double> {
 			final Issues other) {
 		final int size = opinionOnIssues.size();
 		if (other.numberOfIssues() != size)
-			throw new IllegalStateException(
+			throw new IllegalArgumentException(
 					"You can't use getDistanceFrom if the number of issues of the argument ("
 							+ other.numberOfIssues()
 							+ ") is different from the current object number of issues");

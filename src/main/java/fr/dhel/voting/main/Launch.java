@@ -27,28 +27,6 @@ import fr.dhel.voting.model.system.VotingSystem;
  *
  */
 public class Launch {
-
-	/*
-	1) Vote par valeur (0 à 2) - Range voting - RV
-	2) Vote par valeur (0 à 5) - Range voting - RV
-	3) Jugement Majoritaire - Majority Judgment - MJ
-	2) Vote uninominal à 1 tour - First past the post - plurality - PL1
-	3) Vote uninominal à 2 tours - 2-round plurality - PL2
-	4) Vote uninominal à 4 tours - 4-round plurality - PL4
-	5) Méthode Borda - Borda count - BC
-	6) Anti-plurality - BU
-	7) Electeur au hasard choisi le gagnant - Random Ballot - RB
-	8) Candidat au hasard - Random Winner - RW
-	9) Candidat avec la pire utilité choisi arbitrairement - Worst-summed-utility WInner - WW
-	10) Coombs - Coombs - BC
-	11) Bucklin - Bucklin
-	12) Copeland
-	13) Vote de Dabagh - Dabagh
-	14) Black
-	15) Méthode de Condorcet
-	16) Vote alternatif - Instant Run-off voting - IRV
-	17) Schulze - Schulze
-	 */
 	
 	//===================================================================
 	// METHODES

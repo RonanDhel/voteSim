@@ -18,7 +18,6 @@ import nl.jqno.equalsverifier.Warning;
 
 import org.junit.Test;
 
-import fr.dhel.voting.model.entity.politicalpos.Issues;
 
 
 public class IssuesTest {
@@ -26,11 +25,10 @@ public class IssuesTest {
 	private static final BigDecimal DELTA = new BigDecimal("0.001");
 	
 	@Test
-	public void constructor_1() {
+	public void constructor_ShouldNotThrowIfValueIsAllowed() {
 		new Issues(Collections.singleton(2.0));
 	}
 	
-	@SuppressWarnings("unused")
 	@Test(expected=IllegalArgumentException.class)
 	public void constructor_ShouldAcceptSomeValueAndRefuseTooBig() {
 		try {
@@ -48,6 +46,14 @@ public class IssuesTest {
 		assertThat(new Issues(1.17).numberOfIssues(), is(equalTo(1)));
 		
 		assertThat(new Issues(0.0, 0.5, 1.25, 1.75, 2.5, 3.33, 3.9).numberOfIssues(), is(equalTo(7)));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void getDistanceFrom_ShouldFailIfComparingTwoObjectWithDifferentNumberOfIssues() {
+		Issues oneItem = new Issues(2.0);
+		Issues bigIssues = new Issues(0.3, 0.6, 1.2, 1.8, 2.4, 3.0);
+		
+		oneItem.getDistanceFrom(bigIssues);
 	}
 	
 	@Test

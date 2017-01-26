@@ -1,6 +1,10 @@
 package fr.dhel.voting.model.system;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import fr.dhel.voting.model.entity.Candidate;
@@ -97,6 +101,22 @@ public class RangeValueSystem implements VotingSystem {
 	@Override
 	public ElectionResult countVotes(
 			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		throw new IllegalStateException("not yet implemented");
+		final Map<Candidate, Double> scorePerCandidate;
+
+		scorePerCandidate = votes
+				.stream()
+				.flatMap(b -> b.computeResults().stream())
+				.collect(
+						toMap(v -> v.getKey(), v -> v.getValue(), (oldValue, value) -> oldValue
+								+ value, HashMap::new));
+
+		Candidate result = scorePerCandidate
+				.entrySet()
+				.stream()
+				.sorted((
+						firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
+						firstEntry.getValue())).findFirst().get().getKey();
+
+		return new ElectionResult(result);
 	}
 }
