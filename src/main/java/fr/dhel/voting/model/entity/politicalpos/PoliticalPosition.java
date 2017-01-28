@@ -2,7 +2,7 @@ package fr.dhel.voting.model.entity.politicalpos;
 
 import java.math.BigDecimal;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 
 /**
  * Représente un placement politique et d'estimer à quel point un candidat est

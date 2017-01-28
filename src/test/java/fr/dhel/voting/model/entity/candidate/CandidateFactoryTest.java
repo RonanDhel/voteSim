@@ -1,4 +1,4 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.candidate;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
@@ -9,6 +9,8 @@ import lombok.val;
 
 import org.junit.Test;
 
+import fr.dhel.voting.model.entity.candidate.CandidateFactory;
+import fr.dhel.voting.model.entity.candidate.PoliticalSkill;
 import fr.dhel.voting.model.entity.politicalpos.IssuesBasedPoliticalPosition;
 
 public class CandidateFactoryTest {

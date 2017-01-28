@@ -3,7 +3,7 @@ package fr.dhel.voting.model.system;
 import java.util.List;
 import java.util.Set;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;

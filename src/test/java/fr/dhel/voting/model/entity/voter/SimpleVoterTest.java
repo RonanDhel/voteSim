@@ -1,12 +1,20 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.voter;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +24,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.dhel.voting.model.entity.Candidate;
-import fr.dhel.voting.model.entity.SimpleVoter;
-import fr.dhel.voting.model.entity.Voter;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
+import fr.dhel.voting.model.entity.voter.Voter.BallotVisitor;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
 
@@ -45,6 +52,8 @@ public class SimpleVoterTest {
 	private Candidate candidate5;
 	@Mock
 	private Ballot ballot;
+	@Mock
+	private VoteStrategy voteStrategy;
 	
 	@Mock
 	private PoliticalPosition politicalPosition;
@@ -56,9 +65,11 @@ public class SimpleVoterTest {
 		when(politicalPosition.utility(candidate3)).thenReturn(AVERAGE_UTILITY);
 		when(politicalPosition.utility(candidate4)).thenReturn(ALMOST_PERFECT_UTILITY);
 		when(politicalPosition.utility(candidate5)).thenReturn(PERFECT_UTILITY);
-		
+		when(voteStrategy.getBestCandidate(any(), any())).thenReturn(candidate1);
+		when(voteStrategy.getWorstCandidate(any(), any())).thenReturn(candidate1);
+		when(voteStrategy.getListOfCandidateWithScore(any(), any(), anyInt(), anyInt())).thenReturn(
+				Collections.emptyList());
 	}
-	
 	
 	@Test
 	public void findClosestCandidate_ShouldReturnTheCandidateWithHighestUtility() {
@@ -83,12 +94,23 @@ public class SimpleVoterTest {
 	}
 	
 	@Test
+	public void isIgnorant_ShouldReturnWhateverTheVoterIsIgnorant() {
+		SimpleVoter sv = new SimpleVoter(politicalPosition, true, voteStrategy);
+		
+		assertTrue(sv.isIgnorant());
+		
+		sv = new SimpleVoter(politicalPosition, false, voteStrategy);
+		
+		assertFalse(sv.isIgnorant());
+	}
+	
+	@Test
 	public void vote_ShouldReturnTheBallotFromBallotBuilder() {
 		SimpleVoter sv = new SimpleVoter(politicalPosition);
 		
 		BallotBuilder bb = new BallotBuilder() {
 			@Override
-			public Ballot buildFor(final Voter voter) {
+			public Ballot buildFor(final BallotVisitor visitor) {
 				return ballot;
 			}
 		};
@@ -97,20 +119,42 @@ public class SimpleVoterTest {
 	}
 	
 	@Test
-	public void sortCandidate_ShouldSortTheCandidateByUtility() {
-		SimpleVoter sv = new SimpleVoter(politicalPosition);
+	public void vote_ShouldHaveADefaultVisitorFindingTheBestPossibleResult() {
+		SimpleVoter sv = new SimpleVoter(politicalPosition, false, voteStrategy);
 		
 		Set<Candidate> candidates = new HashSet<>();
 		candidates.add(candidate1);
 		candidates.add(candidate3);
 		candidates.add(candidate2);
 		
-		assertThat(sv.sortCandidates(candidates), contains(candidate2, candidate1, candidate3));
+		assertNotNull(sv.vote(v -> v.visitPlurality(candidates)));
+		
+		verify(voteStrategy).getBestCandidate(eq(sv), any());
+		
+		assertNotNull(sv.vote(v -> v.visitAntiPlurality(candidates)));
+		
+		verify(voteStrategy).getWorstCandidate(eq(sv), any());
+		
+		assertNotNull(sv.vote(v -> v.visitRangeValue(candidates, 0, 2)));
+		
+		verify(voteStrategy).getListOfCandidateWithScore(eq(sv), any(), eq(0), eq(2));
+	}
+	
+	@Test
+	public void sortCandidate_ShouldSortTheCandidateByUtility() {
+		SimpleVoter sv = new SimpleVoter(politicalPosition, false, voteStrategy);
+		
+		Set<Candidate> candidates = new HashSet<>();
+		candidates.add(candidate1);
+		candidates.add(candidate3);
+		candidates.add(candidate2);
+		
+		assertThat(sv.sortCandidates(candidates), contains(candidate3, candidate1, candidate2));
 	}
 	
 	@Test
 	public void sortCandidate_ShouldSortTheCandidateByUtility2() {
-		SimpleVoter sv = new SimpleVoter(politicalPosition);
+		SimpleVoter sv = new SimpleVoter(politicalPosition, false, voteStrategy);
 		
 		Set<Candidate> candidates = new HashSet<>();
 		candidates.add(candidate1);
@@ -119,6 +163,6 @@ public class SimpleVoterTest {
 		candidates.add(candidate4);
 		candidates.add(candidate5);
 		
-		assertThat(sv.sortCandidates(candidates), contains(candidate2, candidate1, candidate3, candidate4, candidate5));
+		assertThat(sv.sortCandidates(candidates), contains(candidate5, candidate4, candidate3, candidate1, candidate2));
 	}
 }

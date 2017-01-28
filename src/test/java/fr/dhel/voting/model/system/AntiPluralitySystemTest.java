@@ -7,13 +7,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import lombok.val;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -24,71 +22,62 @@ import org.mockito.runners.MockitoJUnitRunner;
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.system.ballot.Ballot;
 
-
 @RunWith(MockitoJUnitRunner.class)
-public class PluralitySystemTest {
-	
+public class AntiPluralitySystemTest {
+
 	@Mock
 	private Ballot ballotForGandalf;
 	@Mock
 	private Ballot ballotForAragorn;
 	@Mock
+	private Ballot ballotForGimli;
+	@Mock
 	private Candidate gandalf;
 	@Mock
 	private Candidate aragorn;
-	
+	@Mock
+	private Candidate gimli;
+
 	@Test
 	public void shortName_ShouldReturnTheName() {
-		PluralitySystem ps = new PluralitySystem();
-		
-		assertThat(ps.shortName(), is(equalTo("PL1")));
+		AntiPluralitySystem aps = new AntiPluralitySystem();
+
+		assertThat(aps.shortName(), is(equalTo("APL")));
 	}
-	
+
 	@Test
 	public void isPluralityType_ShouldReturnTrue() {
-		assertTrue(new PluralitySystem().isPluralityType());
+		assertTrue(new AntiPluralitySystem().isPluralityType());
 	}
-	
+
 	Set<Candidate> getCandidates() {
 		Set<Candidate> candidates = new HashSet<>();
 		candidates.add(gandalf);
 		candidates.add(aragorn);
+		candidates.add(gimli);
 		return candidates;
 	}
-	
-	
+
 	@Test
 	public void createBallot_ShouldReturnABallotBuilder() {
-		assertNotNull(new PluralitySystem().createBallot(getCandidates()));
+		assertNotNull(new AntiPluralitySystem().createBallot(getCandidates()));
 	}
-	
+
 	@Test
-	public void countVotes_ShouldElectTheCandidateWithTheMostVote() {
-		PluralitySystem ps = new PluralitySystem();
-		
-		val candidates = getCandidates();
+	public void countVotes_ShouldElectTheCandidateWithTheLeastVote() {
+		AntiPluralitySystem aps = new AntiPluralitySystem();
 
 		when(ballotForGandalf.computeResults()).thenReturn(
 				Collections.singletonList(Pair.of(gandalf, 1.0)));
 		when(ballotForAragorn.computeResults()).thenReturn(
 				Collections.singletonList(Pair.of(aragorn, 1.0)));
+		when(ballotForGimli.computeResults()).thenReturn(
+				Collections.singletonList(Pair.of(gimli, 1.0)));
 
-		for (int i = 0 ; i < 10; i++) {
-			List<Ballot> votes = new ArrayList<>();
-			final Candidate expectedCandidate;
+		List<Ballot> votes = Arrays.asList(ballotForGandalf, ballotForAragorn, ballotForGimli,
+				ballotForGimli, ballotForAragorn, ballotForGimli);
 
-			votes.add(ballotForGandalf);
-			votes.add(ballotForAragorn);
-			if (i % 2 == 0) {
-				votes.add(ballotForGandalf);
-				expectedCandidate = gandalf;
-			} else {
-				votes.add(ballotForAragorn);
-				expectedCandidate = aragorn;
-			}
-
-			assertThat(ps.countVotes(votes, candidates).getElectedCandidate(),
-					is(equalTo(expectedCandidate)));
-		}
+		assertThat(aps.countVotes(votes, getCandidates()).getElectedCandidate(),
+				is(equalTo(gandalf)));
 	}
 }

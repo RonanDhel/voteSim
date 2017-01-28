@@ -1,15 +1,17 @@
 package fr.dhel.voting.model.env;
 
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import lombok.val;
-import fr.dhel.voting.model.entity.Candidate;
-import fr.dhel.voting.model.entity.Voter;
+import fr.dhel.voting.model.entity.candidate.Candidate;
+import fr.dhel.voting.model.entity.voter.Voter;
 import fr.dhel.voting.model.system.VotingSystem;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
@@ -85,15 +87,19 @@ public class VoteEnvironment {
 	void setup() {
 		// rien à faire
 	}
+	
+	private Set<Candidate> getCandidateSet() {
+		return unmodifiableSet(candidateSet);
+	}
 
 	ElectionResult countVotes(final BallotBuilder builder) {
 		List<Ballot> res = voters.stream().map(v -> v.vote(builder)).collect(toList());
 
-		return system.countVotes(res, candidateSet);
+		return system.countVotes(res, getCandidateSet());
 	}
 	
 	public Candidate countVotesAndComputeElectionResult() {
-		val b = system.createBallot(candidateSet);
+		val b = system.createBallot(getCandidateSet());
 		
 		ElectionResult er = countVotes(b);
 

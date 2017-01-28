@@ -1,4 +1,4 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.candidate;
 
 import java.util.Objects;
 

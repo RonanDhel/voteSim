@@ -5,11 +5,10 @@ import java.util.Random;
 import java.util.Set;
 
 import lombok.val;
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import fr.dhel.voting.model.system.ballot.UninominalBallot;
 
 /**
  * Représente le système de <i>tirage au sort pondérée</i>.
@@ -69,7 +68,7 @@ public class RandomBallotSystem implements VotingSystem {
 	@Override
 	public BallotBuilder createBallot(
 			final Set<Candidate> candidateSet) {
-		return v -> new UninominalBallot(v, candidateSet);
+		return v -> v.visitPlurality(candidateSet);
 	}
 
 	@Override

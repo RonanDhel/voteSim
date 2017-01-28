@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 
 public class RankedBallot implements Ballot {
 	private final Set<Candidate> candidateSet;
@@ -23,11 +23,4 @@ public class RankedBallot implements Ballot {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public Set<Candidate> getCandidates() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

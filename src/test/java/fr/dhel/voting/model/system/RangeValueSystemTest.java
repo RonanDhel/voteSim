@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.system.ballot.Ballot;
 
 @RunWith(MockitoJUnitRunner.class)

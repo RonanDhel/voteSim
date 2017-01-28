@@ -16,8 +16,8 @@ import lombok.experimental.ExtensionMethod;
 /**
  * Liste de points évalués sur l'échelle des réelles (positifs seulements). Ces
  * points permettent de simuler un ensemble d'interrogations/sujets et de placer
- * les {@link fr.dhel.voting.model.entity.Candidate} et les
- * {@link fr.dhel.voting.model.entity.Voter} sur l'échiquier politique de
+ * les {@link fr.dhel.voting.model.entity.candidate.Candidate} et les
+ * {@link fr.dhel.voting.model.entity.voter.Voter} sur l'échiquier politique de
  * manière plus fine qu'un schéma gauche/droite classique.
  * <p>
  * Ces listes peuvent être comparée entre elles en calculant leur distance, une

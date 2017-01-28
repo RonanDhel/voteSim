@@ -1,4 +1,4 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.candidate;
 
 /**
  * Niveau de maîtrise du langage politique.

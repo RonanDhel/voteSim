@@ -1,6 +1,6 @@
 package fr.dhel.voting.model.env;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 
 /**
  * Contient le résultat d'une éléction.

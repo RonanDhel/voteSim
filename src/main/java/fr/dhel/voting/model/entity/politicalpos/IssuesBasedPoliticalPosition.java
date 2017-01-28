@@ -6,7 +6,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 
 /**
  * Représente un placement politique utilisant un ensemble de sujets, tels que

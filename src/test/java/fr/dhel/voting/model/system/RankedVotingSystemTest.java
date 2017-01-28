@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RankedVotingSystemTest {

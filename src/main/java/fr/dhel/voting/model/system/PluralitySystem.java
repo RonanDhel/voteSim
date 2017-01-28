@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import fr.dhel.voting.model.system.ballot.UninominalBallot;
 
 /**
  * Représente le <i>scrutin uninominal à 1 tour</i>.
@@ -72,7 +71,7 @@ public class PluralitySystem implements VotingSystem {
 	@Override
 	public BallotBuilder createBallot(
 			final Set<Candidate> candidateSet) {
-		return v -> new UninominalBallot(v, candidateSet);
+		return v -> v.visitPlurality(candidateSet);
 	}
 
 	@Override

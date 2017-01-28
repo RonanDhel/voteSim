@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import fr.dhel.voting.model.system.ballot.ValuedBallot;
 
 /**
  * Représente le système de <i>vote par valeur</i>.
@@ -95,7 +94,7 @@ public class RangeValueSystem implements VotingSystem {
 	@Override
 	public BallotBuilder createBallot(
 			final Set<Candidate> candidateSet) {
-		return v -> new ValuedBallot(v, candidateSet, minRange, maxRange);
+		return v -> v.visitRangeValue(candidateSet, minRange, maxRange);
 	}
 
 	@Override
@@ -103,6 +102,8 @@ public class RangeValueSystem implements VotingSystem {
 			final List<Ballot> votes, final Set<Candidate> candidateSet) {
 		final Map<Candidate, Double> scorePerCandidate;
 
+		checkThatBallotsAreValid(votes);
+		
 		scorePerCandidate = votes
 				.stream()
 				.flatMap(b -> b.computeResults().stream())
@@ -118,5 +119,13 @@ public class RangeValueSystem implements VotingSystem {
 						firstEntry.getValue())).findFirst().get().getKey();
 
 		return new ElectionResult(result);
+	}
+
+	private void checkThatBallotsAreValid(final List<Ballot> votes) {
+		if (votes.stream().flatMap(b -> b.computeResults().stream())
+				.anyMatch(p -> p.getValue() < minRange || p.getValue() > maxRange)) {
+			throw new IllegalArgumentException("Some ballots have a score superior to " + maxRange
+					+ " or inferior to " + minRange);
+		}
 	}
 }

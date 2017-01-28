@@ -1,4 +1,4 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.candidate;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -10,8 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.dhel.voting.model.entity.Candidate;
-import fr.dhel.voting.model.entity.PoliticalSkill;
+import fr.dhel.voting.model.entity.candidate.Candidate;
+import fr.dhel.voting.model.entity.candidate.PoliticalSkill;
 import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -1,15 +1,32 @@
-package fr.dhel.voting.model.entity;
+package fr.dhel.voting.model.entity.voter;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
 import fr.dhel.voting.model.system.VotingSystem;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
+import fr.dhel.voting.model.system.ballot.UninominalBallot;
+import fr.dhel.voting.model.system.ballot.ValuedBallot;
 
 public interface Voter {
+	public interface BallotVisitor {
+		UninominalBallot visitPlurality(final Set<Candidate> candidateSet);
+
+		UninominalBallot visitAntiPlurality(final Set<Candidate> candidateSet);
+
+		//RankedBallot visitRankedBallot(final Set<Candidate> candidateSet);
+
+		ValuedBallot visitRangeValue(
+				final Set<Candidate> candidateSet, final int minRange, final int maxRange);
+
+		ValuedBallot visitMajorityJudgment(final Set<Candidate> candidateSet);
+
+	}
+
 	/**
 	 * Indique si le voteur est ignorant, un voteur ignorant ne votera pas
 	 * nécessairement de manière stratégique.

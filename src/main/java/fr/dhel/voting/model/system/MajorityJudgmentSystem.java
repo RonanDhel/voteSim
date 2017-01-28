@@ -1,9 +1,17 @@
 package fr.dhel.voting.model.system;
 
+import static java.util.Comparator.reverseOrder;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.collections4.CollectionUtils.disjunction;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import fr.dhel.voting.model.entity.Candidate;
+import lombok.val;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
@@ -64,9 +72,9 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  *
  */
 public class MajorityJudgmentSystem implements VotingSystem {
-	
+
 	private static final String FULL_NAME = "Majority-judgment";
-	
+
 	@Override
 	public String shortName() {
 		return "MJ";
@@ -83,15 +91,83 @@ public class MajorityJudgmentSystem implements VotingSystem {
 	}
 
 	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return null;
+	public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+		return v -> v.visitMajorityJudgment(candidateSet);
+	}
+
+	Map<Candidate, List<Double>> candidateToScoreMap(
+			final List<Ballot> votes, final Set<Candidate> candidateSet) {
+		Map<Candidate, List<Double>> result = new HashMap<>();
+
+		for (Candidate c : candidateSet) {
+			List<Double> listOfScore = votes.stream()
+					.flatMap(v -> v.computeResults().stream())
+					.filter(p -> p.getKey().equals(c)).map(p -> p.getValue())
+					.sorted(reverseOrder())
+					.collect(toList());
+			result.put(c, listOfScore);
+		}
+
+		return result;
+	}
+
+	private static double median(final List<Double> scores) {
+		final int middle = scores.size() / 2;
+		return scores.get(middle);
+	}
+
+	private static double findBestMedian(final Map<Candidate, List<Double>> candidateWithScores) {
+		return candidateWithScores.values().stream().mapToDouble(MajorityJudgmentSystem::median)
+				.max().getAsDouble();
+	}
+
+	private static void removeLast(final List<?> list) {
+		list.remove(list.size() - 1);
+	}
+	
+	private static boolean hasOneBallotLeft(
+			final Map<Candidate, List<Double>> candidateWithScores) {
+		return candidateWithScores.values().stream().anyMatch(c -> c.size() <= 1);
+	}
+	
+	private Candidate findElectedCandidate(
+			final List<Ballot> votes, final Set<Candidate> candidateSet) {
+		val candidateWithScores = candidateToScoreMap(votes, candidateSet);
+		Candidate electedCandidate = null;
+
+		do {
+			double bestMedian = findBestMedian(candidateWithScores);
+	
+			val res = candidateWithScores.entrySet().stream()
+					.filter(e -> median(e.getValue()) >= bestMedian)
+					.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	
+			if (res.size() > 1) {
+				val candidatesToRemove = disjunction(candidateSet, res.keySet());
+				for (Candidate c : candidatesToRemove) {
+					candidateWithScores.remove(c);
+				}
+				if (hasOneBallotLeft(candidateWithScores)) {
+					electedCandidate = findOneCandidateFromCandidateMap(res);
+				} else {
+					candidateWithScores.values().stream().forEach(MajorityJudgmentSystem::removeLast);
+				}
+			} else {
+				electedCandidate = findOneCandidateFromCandidateMap(res);
+			}
+		} while(electedCandidate == null);
+
+		return electedCandidate;
+	}
+
+	private static Candidate findOneCandidateFromCandidateMap(
+			final Map<Candidate, ?> res) {
+		return res.keySet().stream().findAny().get();
 	}
 
 	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		throw new IllegalStateException("not yet implemented");
+	public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+		return new ElectionResult(findElectedCandidate(votes, candidateSet));
 	}
 
 }

@@ -2,7 +2,7 @@ package fr.dhel.voting.model.system;
 
 import java.util.Set;
 
-import fr.dhel.voting.model.entity.Candidate;
+import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
 import fr.dhel.voting.model.system.ballot.RankedBallot;
 
