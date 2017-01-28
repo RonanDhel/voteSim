@@ -3,7 +3,6 @@ package fr.dhel.voting.model.env;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
