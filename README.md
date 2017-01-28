@@ -18,6 +18,7 @@ L'un des objectifs de ce projet est de comparer le vote par valeur avec le Jugem
 ## SYSTEMES DE VOTE SUPPORTES
 
 A terme, voici les systèmes de vote devant être supportées :
+
 1. Vote par valeur (0 à 2) - Range voting - RV
 2. Vote par valeur (0 à 5) - Range voting - RV
 3. Jugement Majoritaire - Majority Judgment - MJ
