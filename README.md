@@ -22,31 +22,36 @@ A terme, voici les systèmes de vote devant être supportées :
 1. Vote par valeur (0 à 2) - Range voting - RV
 2. Vote par valeur (0 à 5) - Range voting - RV
 3. Jugement Majoritaire - Majority Judgment - MJ
-2. Vote uninominal à 1 tour - First past the post - plurality - PL1
-3. Vote uninominal à 2 tours - 2-round plurality - PL2
-4. Vote uninominal à 4 tours - 4-round plurality - PL4
-5. Méthode Borda - Borda count - BC
-6. Anti-plurality - APL
-7. Electeur au hasard choisi le gagnant - Random Ballot - RB
-8. Candidat au hasard - Random Winner - RW
-9. Candidat avec la pire utilité choisi arbitrairement - Worst-summed-utility Winner - WW
-10. Coombs - Coombs - CO
-11. Bucklin - Bucklin - BUC
-12. Méthode de Copeland - Copeland's method - CLM
-13. Vote de Dabagh - Dabagh - DBH
-14. Black (si pas de gagnant de Condorcet, on utilise la Méthode de Borda) - Black - BL
-15. Méthode de Baldwin - Baldwin's method - BWM
-16. Vote alternatif - Instant Run-off voting - IRV
-17. Schulze - Schulze - SU
-
+4. Vote uninominal à 1 tour - First past the post - plurality - PL1
+5. Vote uninominal à 2 tours - 2-round plurality - PL2
+6. Vote uninominal à 4 tours - 4-round plurality - PL4
+7. Méthode Borda - Borda count - BC
+8. Anti-plurality - APL
+9. Electeur au hasard choisi le gagnant - Random Ballot - RB
+10. Candidat au hasard - Random Winner - RW
+11. Candidat avec la pire utilité choisi arbitrairement - Worst-summed-utility Winner - WW
+12. Coombs - Coombs - CO
+13. Bucklin - Bucklin - BUC
+14. Méthode de Copeland - Copeland's method - CLM
+15. Vote de Dabagh - Dabagh - DBH
+16. Black (si pas de gagnant de Condorcet, on utilise la Méthode de Borda) - Black - BL
+17. Méthode de Baldwin - Baldwin's method - BWM
+18. Vote alternatif - Instant Run-off voting - IRV
+19. Schulze - Schulze - SU
+20. Scrutin de Condorcet randomisé - Randomized Condorcet System - RCS
 
 ## VOTEUR HONNÊTE ET UTILITE
-L'utilité de chaque votant est un nombre réél entre 0 et 1 indiquant la satisfaction d'un votant pour un candidat. La valeur 1 indiquant
-une utilité parfaite et donc une satisfaction parfaite du votant pour le candidat indiqué.
-Le meilleur candidat d'une éléction est donc celui qui maximise l'utilité totale.
-Si chaque votant étaint intéressé par l'avis de ses pairs, ce candidat serait généralement celui qui est élu.
-Un voteur honnête votera toujours préférentiellement pour le candidat qui maximise son utilité puis descendra dans l'ordre.
+L'utilité de chaque votant est un nombre réél entre 0 et 1 indiquant la satisfaction d'un votant pour un(e) candidat(e). La valeur 1 indiquant une utilité parfaite et donc une "satisfaction" parfaite du votant pour le(la) candidat(e) indiqué(e).  
+Le "meilleur(e)" candidat(e) d'une éléction est donc celui (celle) qui maximise l'utilité totale.  
+Si chaque votant était intéressé par l'avis de ses pairs, ce(tte) candidat(e) serait généralement celui (celle) qui est élu(e).
 
+Un voteur honnête votera toujours préférentiellement pour le(la) candidat(e) qui maximise son utilité personnelle puis descendra dans l'ordre ; même si leurs candidat(e)s préféré(e)s ont peu de chances de gagner.  
+Les voteurs stratégique (ou non-honnête) vote de manière à élire le(la) candidat(e) proche d'eux ayant le plus de chance de gagner. La stratégie adoptée par type de scrutin est détaillée ci-dessous :
+
+
+## VOTE STRATEGIQUE
+
+TODO
 
 ## COPYRIGHT
 
