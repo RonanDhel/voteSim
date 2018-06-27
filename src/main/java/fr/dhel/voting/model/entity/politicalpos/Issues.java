@@ -94,11 +94,10 @@ public class Issues implements Iterable<Double> {
 		val otherIssues = other.opinionOnIssues;
 
 		for (int i = 0; i < size; i++) {
-			result = result.add(BigDecimal.valueOf(otherIssues.get(i) - opinionOnIssues.get(i))
-					.pow(2));
+			result = result.add(BigDecimal.valueOf(otherIssues.get(i) - opinionOnIssues.get(i)));
 		}
 		
-		return result;
+		return result.pow(2);
 	}
 
 	@Override
