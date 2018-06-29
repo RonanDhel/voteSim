@@ -20,12 +20,13 @@ L'un des objectifs de ce projet est de comparer le vote par valeur avec le Jugem
 Voici les systèmes actuellement supportés :
 
 1. Vote par valeur - Range voting - RV
-2. Jugement Majoritaire - Majority Judgment - MJ
-3. Vote uninominal à 1 tour - First past the post - plurality - PL1
-4. Vote uninominal à 2 tours - 2-round plurality - PL2
-5. Vote uninominal à 4 tours - 4-round plurality - PL4
-6. Anti-plurality - APL
-7. Electeur au hasard choisi le gagnant - Random Ballot - RB
+2. Vote par approbation - Approval voting - AS
+3. Jugement Majoritaire - Majority Judgment - MJ
+4. Vote uninominal à 1 tour - First past the post - plurality - PL1
+5. Vote uninominal à 2 tours - 2-round plurality - PL2
+6. Vote uninominal à 4 tours - 4-round plurality - PL4
+7. Anti-plurality - APL
+8. Electeur au hasard choisi le gagnant - Random Ballot - RB
 
 A terme, voici les autres systèmes devant être inclus :
 
