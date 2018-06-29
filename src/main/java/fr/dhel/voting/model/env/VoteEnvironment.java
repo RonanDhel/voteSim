@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import lombok.val;
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.entity.voter.Voter;
 import fr.dhel.voting.model.system.VotingSystem;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
+import lombok.val;
 
 public class VoteEnvironment {
 
@@ -102,6 +102,9 @@ public class VoteEnvironment {
 		
 		ElectionResult er = countVotes(b);
 
+		while (er.needNextRound()) {
+			er = countVotes(system.createBallot(er.candidatesForNextRound()));
+		}
 		return er.getElectedCandidate();
 	}
 
