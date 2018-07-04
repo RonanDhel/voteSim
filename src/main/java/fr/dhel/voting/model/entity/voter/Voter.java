@@ -9,6 +9,7 @@ import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
 import fr.dhel.voting.model.system.VotingSystem;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
+import fr.dhel.voting.model.system.ballot.RankedBallot;
 import fr.dhel.voting.model.system.ballot.UninominalBallot;
 import fr.dhel.voting.model.system.ballot.ValuedBallot;
 
@@ -18,7 +19,7 @@ public interface Voter {
 
 		UninominalBallot visitAntiPlurality(final Set<Candidate> candidateSet);
 
-		//RankedBallot visitRankedBallot(final Set<Candidate> candidateSet);
+		RankedBallot visitRankedBallot(final Set<Candidate> candidateSet);
 
 		ValuedBallot visitRangeValue(
 				final Set<Candidate> candidateSet, final int minRange, final int maxRange);
@@ -43,13 +44,31 @@ public interface Voter {
 	/**
 	 * Indique l'utilité perçue par le voteur sur le {@link Candidate} fourni.
 	 * 
-	 * Une valeur de 0 indiquant que l'utilité du candidat est nulle et une 
+	 * Une valeur de 0 indiquant que l'utilité du candidat est nulle et une
 	 * utilité de 1 étant maximale.
+	 * <p>
+	 * L'utilité perçue est sensiblement différent de l'utilité réelle car elle peut
+	 * prendre en compte des facteurs altérant l'utilité perçue notamment
+	 * l'ignorance de l'actuel votant ({@link #isIgnorant()}).
+	 * 
 	 * 
 	 * @param c le candidat à tester
 	 * @return l'utilité du candidat
 	 */
 	BigDecimal utility(final Candidate c);
+	
+	/**
+	 * Indique l'utilité réelle par le voteur sur le {@link Candidate} fourni.
+	 * 
+	 * Une valeur de 0 indiquant que l'utilité du candidat est nulle et une
+	 * utilité de 1 étant maximale.
+	 * 
+	 * 
+	 * @param c le candidat à tester
+	 * @return l'utilité du candidat
+	 * @see #utility(Candidate)
+	 */
+	BigDecimal trueUtility(final Candidate c);
 	
 	/**
 	 * Retourne une liste triée des candidats en fonction de l'utilité calculée

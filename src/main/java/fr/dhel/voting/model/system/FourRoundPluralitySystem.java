@@ -125,10 +125,8 @@ public class FourRoundPluralitySystem implements VotingSystem {
 		if (newCandidateSet.size() < 3 || newCandidateSet.size() == scorePerCandidate.size()) {
 			// 2 candidats ou moins ont réussi à atteindre les 8% OU tous valide
 			// cette condition donc on passe au 3eme tour et on prends les 3 meilleurs
-			val bestThree = new HashSet<Candidate>();
-			bestThree.add(sortedResult.get(0).getKey());
-			bestThree.add(sortedResult.get(1).getKey());
-			bestThree.add(sortedResult.get(2).getKey());
+			val bestThree = sortedResult.stream().map(entry -> entry.getKey()).limit(3).collect(
+					toSet());
 			return ElectionResult.electionWithNewRound(bestThree);
 		}
 

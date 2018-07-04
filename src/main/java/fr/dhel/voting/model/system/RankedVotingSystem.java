@@ -4,7 +4,6 @@ import java.util.Set;
 
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import fr.dhel.voting.model.system.ballot.RankedBallot;
 
 public abstract class RankedVotingSystem implements VotingSystem {
 	@Override
@@ -14,6 +13,6 @@ public abstract class RankedVotingSystem implements VotingSystem {
 	
 	@Override
 	public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
-		return v -> new RankedBallot(candidateSet);
+		return v -> v.visitRankedBallot(candidateSet);
 	}
 }

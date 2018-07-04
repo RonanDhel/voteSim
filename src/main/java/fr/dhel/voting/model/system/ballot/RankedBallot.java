@@ -1,26 +1,27 @@
 package fr.dhel.voting.model.system.ballot;
 
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import fr.dhel.voting.model.entity.candidate.Candidate;
 
 public class RankedBallot implements Ballot {
-	private final Set<Candidate> candidateSet;
+	private final List<Candidate> candidates;
 	
-	public RankedBallot(final Set<Candidate> candidateSet) {
-		this.candidateSet = Objects.requireNonNull(candidateSet, "candidateSet should not be null");
-		if (candidateSet.isEmpty())
-			throw new IllegalArgumentException("candidateSet should not be empty");
+	public RankedBallot(final List<Candidate> candidates) {
+		this.candidates = Objects.requireNonNull(candidates, "candidates should not be null");
+		if (candidates.isEmpty())
+			throw new IllegalArgumentException("candidates should not be empty");
 		
 	}
 
 	@Override
 	public List<Pair<Candidate, Double>> computeResults() {
-		// TODO Auto-generated method stub
-		return null;
+		return unmodifiableList(candidates.stream().map(c -> Pair.of(c, 1.0)).collect(toList()));
 	}
 }

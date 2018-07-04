@@ -1,6 +1,7 @@
 package fr.dhel.voting.model.entity.voter;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 import java.math.BigDecimal;
@@ -9,15 +10,16 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
+import fr.dhel.voting.model.system.ballot.RankedBallot;
 import fr.dhel.voting.model.system.ballot.UninominalBallot;
 import fr.dhel.voting.model.system.ballot.ValuedBallot;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.val;
 
 @ToString
 public class SimpleVoter implements Voter {
@@ -47,6 +49,12 @@ public class SimpleVoter implements Voter {
 	public final BigDecimal utility(
 			final Candidate c) {
 		return getPoliticalPosition().utility(c);
+	}
+
+	@Override
+	public BigDecimal trueUtility(final Candidate c) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -87,6 +95,14 @@ public class SimpleVoter implements Voter {
 			@Override
 			public UninominalBallot visitAntiPlurality(final Set<Candidate> candidateSet) {
 				return new UninominalBallot(voteStrategy.getWorstCandidate(voter, candidateSet));
+			}
+
+			@Override
+			public RankedBallot visitRankedBallot(final Set<Candidate> candidateSet) {
+				return new RankedBallot(candidateSet
+						.stream()
+						.sorted(comparing(SimpleVoter.this::utility).reversed())
+						.collect(toList()));
 			}
 
 			@Override
