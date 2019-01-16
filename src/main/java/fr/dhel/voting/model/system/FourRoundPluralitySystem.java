@@ -14,7 +14,6 @@ import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import lombok.val;
 
 /**
  * Représente le <i>scrutin uninominal à 4 tour</i>.
@@ -47,90 +46,81 @@ import lombok.val;
  */
 public class FourRoundPluralitySystem implements VotingSystem {
 
-	private static final String FULL_NAME = "Plurality-4-turn";
+    private static final String FULL_NAME = "Plurality-4-turn";
 
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	@Override
-	public String shortName() {
-		return "PL4";
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    @Override
+    public String shortName() {
+        return "PL4";
+    }
 
-	@Override
-	public boolean isPluralityType() {
-		return true;
-	}
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
 
-	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return v -> v.visitPlurality(candidateSet);
-	}
+    @Override
+    public boolean isPluralityType() {
+        return true;
+    }
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		Map<Candidate, Double> scorePerCandidate = new HashMap<>();
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return v -> v.visitPlurality(candidateSet);
+    }
 
-		for (Ballot vote : votes) {
-			Candidate c = vote.computeResults().get(0).getKey();
-			final double value = vote.computeResults().get(0).getValue();
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        Map<Candidate, Double> scorePerCandidate = new HashMap<>();
 
-			scorePerCandidate.merge(c, value, (
-					oldValue, newValue) -> oldValue + newValue);
-		}
+        for (Ballot vote : votes) {
+            Candidate c = vote.computeResults().get(0).getKey();
+            final double value = vote.computeResults().get(0).getValue();
 
-		val sortedResult = scorePerCandidate
-				.entrySet()
-				.stream()
-				.sorted((
-						firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
-						firstEntry.getValue())).collect(toList());
+            scorePerCandidate.merge(c, value, (oldValue, newValue) -> oldValue + newValue);
+        }
 
-		val bestCandidateWithScore = sortedResult.get(0);
-		
-		int numberOfVoteToBeElected = votes.size() / 2;
-		if (bestCandidateWithScore.getValue() > numberOfVoteToBeElected) {
-			return new ElectionResult(bestCandidateWithScore.getKey());
-		}
-		// il n'y a que 2 candidats et ils ont fait égalité (sinon on aurait validé le
-		// if précédent)
-		if (sortedResult.size() == 2) {
-			Candidate candidateAtRandom = sortedResult
-					.get(ThreadLocalRandom.current().nextInt(2))
-					.getKey();
-			return new ElectionResult(candidateAtRandom);
-		} else if (sortedResult.size() == 3) {
-			// trois candidats donc on est au 3eme tour
-			val bestTwo = new HashSet<Candidate>();
-			bestTwo.add(sortedResult.get(0).getKey());
-			bestTwo.add(sortedResult.get(1).getKey());
-			return ElectionResult.electionWithNewRound(bestTwo);
-		}
-		
-		final int numberOfVotes = votes.size();
-		Set<Candidate> newCandidateSet = scorePerCandidate
-				.entrySet()
-				.stream()
-				.filter(entry -> (entry.getValue() * 100 / numberOfVotes) > 8)
-				.map(entry -> entry.getKey())
-				.collect(toSet());
-		if (newCandidateSet.size() < 3 || newCandidateSet.size() == scorePerCandidate.size()) {
-			// 2 candidats ou moins ont réussi à atteindre les 8% OU tous valide
-			// cette condition donc on passe au 3eme tour et on prends les 3 meilleurs
-			val bestThree = sortedResult.stream().map(entry -> entry.getKey()).limit(3).collect(
-					toSet());
-			return ElectionResult.electionWithNewRound(bestThree);
-		}
+        var sortedResult = scorePerCandidate.entrySet().stream()
+                .sorted((firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
+                        firstEntry.getValue()))
+                .collect(toList());
 
-		return ElectionResult.electionWithNewRound(newCandidateSet);
-	}
+        var bestCandidateWithScore = sortedResult.get(0);
+
+        int numberOfVoteToBeElected = votes.size() / 2;
+        if (bestCandidateWithScore.getValue() > numberOfVoteToBeElected) {
+            return new ElectionResult(bestCandidateWithScore.getKey());
+        }
+        // il n'y a que 2 candidats et ils ont fait égalité (sinon on aurait validé le
+        // if précédent)
+        if (sortedResult.size() == 2) {
+            Candidate candidateAtRandom = sortedResult.get(ThreadLocalRandom.current().nextInt(2))
+                    .getKey();
+            return new ElectionResult(candidateAtRandom);
+        } else if (sortedResult.size() == 3) {
+            // trois candidats donc on est au 3eme tour
+            var bestTwo = new HashSet<Candidate>();
+            bestTwo.add(sortedResult.get(0).getKey());
+            bestTwo.add(sortedResult.get(1).getKey());
+            return ElectionResult.electionWithNewRound(bestTwo);
+        }
+
+        final int numberOfVotes = votes.size();
+        Set<Candidate> newCandidateSet = scorePerCandidate.entrySet().stream()
+                .filter(entry -> (entry.getValue() * 100 / numberOfVotes) > 8)
+                .map(entry -> entry.getKey()).collect(toSet());
+        if (newCandidateSet.size() < 3 || newCandidateSet.size() == scorePerCandidate.size()) {
+            // 2 candidats ou moins ont réussi à atteindre les 8% OU tous valide
+            // cette condition donc on passe au 3eme tour et on prends les 3 meilleurs
+            var bestThree = sortedResult.stream().map(entry -> entry.getKey()).limit(3)
+                    .collect(toSet());
+            return ElectionResult.electionWithNewRound(bestThree);
+        }
+
+        return ElectionResult.electionWithNewRound(newCandidateSet);
+    }
 
 }

@@ -23,56 +23,50 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * Ce système se comporte comme ceci :
  * <ul>
  * <li>si un candidat remporterait la majorité des voix, il doit gagner : pas
- * nécessairement mais en général oui
- * </li>
+ * nécessairement mais en général oui</li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * non
- * </li>
- * <li>gagnant de Condorcet : non
- * </li>
- * <li>perdant de Condorcet : non
- * </li>
+ * non</li>
+ * <li>gagnant de Condorcet : non</li>
+ * <li>perdant de Condorcet : non</li>
  * </ul>
  * 
  * @author Ronan
  *
  */
 public class ApprovalSystem implements VotingSystem {
-	
-	private static final String FULL_NAME = "Approval-vote";
-	
-	private final RangeValueSystem rangeS = new RangeValueSystem(0, 1);
-	
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	@Override
-	public String shortName() {
-		return "AS";
-	}
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    private static final String FULL_NAME = "Approval-vote";
 
-	@Override
-	public boolean isPluralityType() {
-		return false;
-	}
+    private final RangeValueSystem rangeS = new RangeValueSystem(0, 1);
 
-	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return rangeS.createBallot(candidateSet);
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		return rangeS.countVotes(votes, candidateSet);
-	}
+    @Override
+    public String shortName() {
+        return "AS";
+    }
+
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
+
+    @Override
+    public boolean isPluralityType() {
+        return false;
+    }
+
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return rangeS.createBallot(candidateSet);
+    }
+
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        return rangeS.countVotes(votes, candidateSet);
+    }
 
 }

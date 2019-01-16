@@ -1,9 +1,6 @@
 package fr.dhel.voting.model.system;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -12,13 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import lombok.val;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.system.ballot.Ballot;
@@ -26,56 +21,56 @@ import fr.dhel.voting.model.system.ballot.Ballot;
 @RunWith(MockitoJUnitRunner.class)
 public class ApprovalSystemTest {
 
-	@Mock
-	private Ballot ballotForMartyAndDoc;
-	@Mock
-	private Ballot ballotForMarty;
-	@Mock
-	private Ballot ballotForBiff;
-	@Mock
-	private Ballot ballotForNoone;
-	@Mock
-	private Candidate marty;
-	@Mock
-	private Candidate doc;
-	@Mock
-	private Candidate biff;
+    @Mock
+    private Ballot ballotForMartyAndDoc;
+    @Mock
+    private Ballot ballotForMarty;
+    @Mock
+    private Ballot ballotForBiff;
+    @Mock
+    private Ballot ballotForNoone;
+    @Mock
+    private Candidate marty;
+    @Mock
+    private Candidate doc;
+    @Mock
+    private Candidate biff;
 
-	@Test
-	public void shortName_ShouldReturnTheName() {
-		ApprovalSystem as = new ApprovalSystem();
+    @Test
+    public void shortName_ShouldReturnTheName() {
+        ApprovalSystem as = new ApprovalSystem();
 
-		assertThat(as.shortName(), is(equalTo("AS")));
-	}
+        assertThat(as.shortName()).isEqualTo("AS");
+    }
 
-	Set<Candidate> getCandidates() {
-		Set<Candidate> candidates = new HashSet<>();
-		candidates.add(marty);
-		candidates.add(doc);
-		candidates.add(biff);
-		return candidates;
-	}
-	
-	@Test
-	public void createBallot_ShouldReturnABallotBuilder() {
-		assertNotNull(new ApprovalSystem().createBallot(getCandidates()));
-	}
-	
-	@Test
-	public void countVotes_ShouldElectTheMostApprovedCandidate() {
-		ApprovalSystem as = new ApprovalSystem();
+    Set<Candidate> getCandidates() {
+        Set<Candidate> candidates = new HashSet<>();
+        candidates.add(marty);
+        candidates.add(doc);
+        candidates.add(biff);
+        return candidates;
+    }
 
-		val candidates = getCandidates();
+    @Test
+    public void createBallot_ShouldReturnABallotBuilder() {
+        assertThat(new ApprovalSystem().createBallot(getCandidates())).isNotNull();
+    }
 
-		when(ballotForMartyAndDoc.computeResults()).thenReturn(
-				Arrays.asList(Pair.of(marty, 1.0), Pair.of(doc, 1.0)));
-		when(ballotForMarty.computeResults()).thenReturn(Arrays.asList(Pair.of(marty, 1.0)));
-		when(ballotForBiff.computeResults()).thenReturn(Arrays.asList(Pair.of(biff, 1.0)));
-		when(ballotForNoone.computeResults()).thenReturn(Collections.emptyList());
+    @Test
+    public void countVotes_ShouldElectTheMostApprovedCandidate() {
+        ApprovalSystem as = new ApprovalSystem();
 
-		List<Ballot> votes = Arrays.asList(ballotForMartyAndDoc, ballotForMarty, ballotForBiff,
-				ballotForNoone);
+        var candidates = getCandidates();
 
-		assertThat(as.countVotes(votes, candidates).getElectedCandidate(), is(equalTo(marty)));
-	}
+        when(ballotForMartyAndDoc.computeResults())
+                .thenReturn(Arrays.asList(Pair.of(marty, 1.0), Pair.of(doc, 1.0)));
+        when(ballotForMarty.computeResults()).thenReturn(Arrays.asList(Pair.of(marty, 1.0)));
+        when(ballotForBiff.computeResults()).thenReturn(Arrays.asList(Pair.of(biff, 1.0)));
+        when(ballotForNoone.computeResults()).thenReturn(Collections.emptyList());
+
+        List<Ballot> votes = Arrays.asList(ballotForMartyAndDoc, ballotForMarty, ballotForBiff,
+                ballotForNoone);
+
+        assertThat(as.countVotes(votes, candidates).getElectedCandidate()).isEqualTo(marty);
+    }
 }

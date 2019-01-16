@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import lombok.val;
 import lombok.experimental.ExtensionMethod;
 
 /**
@@ -32,101 +31,99 @@ import lombok.experimental.ExtensionMethod;
  */
 @ExtensionMethod(java.util.Arrays.class)
 public class Issues implements Iterable<Double> {
-	public static final double MAX_VALUE = 5;
+    public static final double MAX_VALUE = 5;
 
-	private final List<Double> opinionOnIssues;
-	private String stringCache;
+    private final List<Double> opinionOnIssues;
+    private String stringCache;
 
-	public Issues(final List<Double> issues) {
-		if (issues.isEmpty())
-			throw new IllegalArgumentException("Should have at least one issues");
+    public Issues(final List<Double> issues) {
+        if (issues.isEmpty())
+            throw new IllegalArgumentException("Should have at least one issues");
 
-		if (issues.stream().anyMatch(e -> e < 0 || e > MAX_VALUE))
-			throw new IllegalArgumentException("List of issues should all be between 0 and "
-					+ MAX_VALUE);
+        if (issues.stream().anyMatch(e -> e < 0 || e > MAX_VALUE))
+            throw new IllegalArgumentException(
+                    "List of issues should all be between 0 and " + MAX_VALUE);
 
-		opinionOnIssues = issues;
-	}
+        opinionOnIssues = issues;
+    }
 
-	public Issues(final Iterable<Double> issues) {
-		this(StreamSupport.stream(issues.spliterator(), false).collect(toList()));
-	}
+    public Issues(final Iterable<Double> issues) {
+        this(StreamSupport.stream(issues.spliterator(), false).collect(toList()));
+    }
 
-	public Issues(final double firstIssue, final Double... othersIssues) {
-		this(constructorHelper(firstIssue, othersIssues));
-	}
-	
-	//===================================================================
-	// METHODES
-	//===================================================================
+    public Issues(final double firstIssue, final Double... othersIssues) {
+        this(constructorHelper(firstIssue, othersIssues));
+    }
 
-	private static List<Double> constructorHelper(
-			final double firstIssue, final Double... othersIssues) {
-		List<Double> a = new ArrayList<>();
-		a.add(firstIssue);
-		a.addAll(Arrays.asList(othersIssues));
-		return a;
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public final Iterator<Double> iterator() {
-		return opinionOnIssues.iterator();
-	}
+    private static List<Double> constructorHelper(
+            final double firstIssue, final Double... othersIssues) {
+        List<Double> a = new ArrayList<>();
+        a.add(firstIssue);
+        a.addAll(Arrays.asList(othersIssues));
+        return a;
+    }
 
-	/**
-	 * @return le nombre de points en traitement
-	 */
-	public final int numberOfIssues() {
-		return opinionOnIssues.size();
-	}
+    @Override
+    public final Iterator<Double> iterator() {
+        return opinionOnIssues.iterator();
+    }
 
-	public final BigDecimal getDistanceFrom(
-			final Issues other) {
-		final int size = opinionOnIssues.size();
-		if (other.numberOfIssues() != size)
-			throw new IllegalArgumentException(
-					"You can't use getDistanceFrom if the number of issues of the argument ("
-							+ other.numberOfIssues()
-							+ ") is different from the current object number of issues");
+    /**
+     * @return le nombre de points en traitement
+     */
+    public final int numberOfIssues() {
+        return opinionOnIssues.size();
+    }
 
-		BigDecimal result = BigDecimal.ZERO;
+    public final BigDecimal getDistanceFrom(final Issues other) {
+        final int size = opinionOnIssues.size();
+        if (other.numberOfIssues() != size)
+            throw new IllegalArgumentException(
+                    "You can't use getDistanceFrom if the number of issues of the argument ("
+                            + other.numberOfIssues()
+                            + ") is different from the current object number of issues");
 
-		val otherIssues = other.opinionOnIssues;
+        BigDecimal result = BigDecimal.ZERO;
 
-		for (int i = 0; i < size; i++) {
-			result = result.add(BigDecimal.valueOf(otherIssues.get(i) - opinionOnIssues.get(i))
-					.pow(2));
-		}
-		
-		return result;
-	}
+        var otherIssues = other.opinionOnIssues;
 
-	@Override
-	public final int hashCode() {
-		return Objects.hash(opinionOnIssues);
-	}
+        for (int i = 0; i < size; i++) {
+            result = result
+                    .add(BigDecimal.valueOf(otherIssues.get(i) - opinionOnIssues.get(i)).pow(2));
+        }
 
-	@Override
-	public final boolean equals(
-			final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (obj instanceof Issues) {
-			Issues other = (Issues) obj;
-			return opinionOnIssues.equals(other.opinionOnIssues);
-		}
-		return false;
-	}
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		if (stringCache == null) {
-			stringCache = "Issues : "
-					+ String.join(", ",
-							opinionOnIssues.stream().map(e -> e.toString()).collect(toList()));
-		}
-		return stringCache;
-	}
+    @Override
+    public final int hashCode() {
+        return Objects.hash(opinionOnIssues);
+    }
+
+    @Override
+    public final boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (obj instanceof Issues) {
+            Issues other = (Issues) obj;
+            return opinionOnIssues.equals(other.opinionOnIssues);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        if (stringCache == null) {
+            stringCache = "Issues : "
+                    + String.join(", ",
+                            opinionOnIssues.stream().map(e -> e.toString()).collect(toList()));
+        }
+        return stringCache;
+    }
 }

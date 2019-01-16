@@ -17,14 +17,14 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * notamment les éléctions américaines, mexicaine, de plusieurs pays
  * asiatiques...
  * <p>
- * Il faut voter pour une et une seule personne, la personne ayant le plus
- * de vote étant élue.
+ * Il faut voter pour une et une seule personne, la personne ayant le plus de
+ * vote étant élue.
  * <p>
- * Si 40% des candidats vote pour le candidat A et que les autres candidats
- * ont tous moins de 40%, le candidat A sera élu. <br />
- * A noter que ce système est très fragile face à 2 candidats ayant
- * des idées proches : s'il y a 3 candidats et que 2 candidats A et B sont très
- * proches sur l'échiquier politique, voici ce qu'il peut se produire : <br />
+ * Si 40% des candidats vote pour le candidat A et que les autres candidats ont
+ * tous moins de 40%, le candidat A sera élu. <br />
+ * A noter que ce système est très fragile face à 2 candidats ayant des idées
+ * proches : s'il y a 3 candidats et que 2 candidats A et B sont très proches
+ * sur l'échiquier politique, voici ce qu'il peut se produire : <br />
  * A a 35% des voix, B a 27% des voix, C a 38% des voix, <br />
  * C est élu alors que la majorité des gens sont en accord avec A et B.
  * <p>
@@ -34,12 +34,9 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * </li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * oui
- * </li>
- * <li>gagnant de Condorcet : non
- * </li>
- * <li>perdant de Condorcet : non
- * </li>
+ * oui</li>
+ * <li>gagnant de Condorcet : non</li>
+ * <li>perdant de Condorcet : non</li>
  * </ul>
  * 
  * @author Ronan
@@ -47,54 +44,49 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  */
 public class PluralitySystem implements VotingSystem {
 
-	private static final String FULL_NAME = "Plurality-1-turn";
+    private static final String FULL_NAME = "Plurality-1-turn";
 
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	@Override
-	public String shortName() {
-		return "PL1";
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    @Override
+    public String shortName() {
+        return "PL1";
+    }
 
-	@Override
-	public boolean isPluralityType() {
-		return true;
-	}
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
 
-	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return v -> v.visitPlurality(candidateSet);
-	}
+    @Override
+    public boolean isPluralityType() {
+        return true;
+    }
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		Map<Candidate, Double> scorePerCandidate = new HashMap<>();
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return v -> v.visitPlurality(candidateSet);
+    }
 
-		for (Ballot vote : votes) {
-			Candidate c = vote.computeResults().get(0).getKey();
-			final double value = vote.computeResults().get(0).getValue();
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        Map<Candidate, Double> scorePerCandidate = new HashMap<>();
 
-			scorePerCandidate.merge(c, value, (
-					oldValue, newValue) -> oldValue + newValue);
-		}
+        for (Ballot vote : votes) {
+            Candidate c = vote.computeResults().get(0).getKey();
+            final double value = vote.computeResults().get(0).getValue();
 
-		Candidate result = scorePerCandidate
-				.entrySet()
-				.stream()
-				.sorted((
-						firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
-						firstEntry.getValue())).findFirst().get().getKey();
+            scorePerCandidate.merge(c, value, (oldValue, newValue) -> oldValue + newValue);
+        }
 
-		return new ElectionResult(result);
-	}
+        Candidate result = scorePerCandidate
+                .entrySet().stream().sorted((firstEntry, secondEntry) -> Double
+                        .compare(secondEntry.getValue(), firstEntry.getValue()))
+                .findFirst().get().getKey();
+
+        return new ElectionResult(result);
+    }
 
 }

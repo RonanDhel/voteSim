@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import lombok.val;
 import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
@@ -13,8 +12,8 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
 /**
  * Représente le système de <i>tirage au sort pondérée</i>.
  * <p>
- * Chaque votant vote pour une seule personne et l'un des bulletins
- * est tiré au sort. Ce bulletin détermine le gagnant.
+ * Chaque votant vote pour une seule personne et l'un des bulletins est tiré au
+ * sort. Ce bulletin détermine le gagnant.
  * <p>
  * En d'autres termes, un élécteur tiré au sort décide du résultat de
  * l'élection.
@@ -25,12 +24,9 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * </li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * N/A
- * </li>
- * <li>gagnant de Condorcet : non
- * </li>
- * <li>perdant de Condorcet : non
- * </li>
+ * N/A</li>
+ * <li>gagnant de Condorcet : non</li>
+ * <li>perdant de Condorcet : non</li>
  * </ul>
  * 
  * @author Ronan
@@ -38,48 +34,46 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  */
 public class RandomBallotSystem implements VotingSystem {
 
-	private static final String FULL_NAME = "Random-ballot";
+    private static final String FULL_NAME = "Random-ballot";
 
-	private final Random random;
+    private final Random random;
 
-	public RandomBallotSystem(final Random random) {
-		this.random = random;
-	}
-	
-	//===================================================================
-	// METHODES
-	//===================================================================
+    public RandomBallotSystem(final Random random) {
+        this.random = random;
+    }
 
-	@Override
-	public String shortName() {
-		return "RB";
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    @Override
+    public String shortName() {
+        return "RB";
+    }
 
-	@Override
-	public boolean isPluralityType() {
-		return false;
-	}
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
 
-	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return v -> v.visitPlurality(candidateSet);
-	}
+    @Override
+    public boolean isPluralityType() {
+        return false;
+    }
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		val ballot = votes.get(random.nextInt(votes.size()));
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return v -> v.visitPlurality(candidateSet);
+    }
 
-		val ballotResults = ballot.computeResults();
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        var ballot = votes.get(random.nextInt(votes.size()));
 
-		val electedCandidate = ballotResults.get(0).getKey();
+        var ballotResults = ballot.computeResults();
 
-		return new ElectionResult(electedCandidate);
-	}
+        var electedCandidate = ballotResults.get(0).getKey();
+
+        return new ElectionResult(electedCandidate);
+    }
 }

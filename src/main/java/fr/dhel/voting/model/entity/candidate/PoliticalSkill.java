@@ -9,5 +9,5 @@ package fr.dhel.voting.model.entity.candidate;
  *
  */
 public enum PoliticalSkill {
-	LOW, AVERAGE, HIGH, VERY_HIGH;
+    LOW, AVERAGE, HIGH, VERY_HIGH;
 }

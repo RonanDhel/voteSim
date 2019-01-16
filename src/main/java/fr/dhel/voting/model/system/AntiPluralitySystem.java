@@ -29,12 +29,9 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * </li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * oui
- * </li>
- * <li>gagnant de Condorcet : non
- * </li>
- * <li>perdant de Condorcet : non
- * </li>
+ * oui</li>
+ * <li>gagnant de Condorcet : non</li>
+ * <li>perdant de Condorcet : non</li>
  * </ul>
  * 
  * @author Ronan
@@ -42,48 +39,45 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  */
 public class AntiPluralitySystem implements VotingSystem {
 
-	private static final String FULL_NAME = "Anti-plurality";
-	
-	@Override
-	public String shortName() {
-		return "APL";
-	}
+    private static final String FULL_NAME = "Anti-plurality";
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    @Override
+    public String shortName() {
+        return "APL";
+    }
 
-	@Override
-	public boolean isPluralityType() {
-		return true;
-	}
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
 
-	@Override
-	public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
-		return v -> v.visitAntiPlurality(candidateSet);
-	}
+    @Override
+    public boolean isPluralityType() {
+        return true;
+    }
 
-	@Override
-	public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		Map<Candidate, Double> scorePerCandidate = new HashMap<>();
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return v -> v.visitAntiPlurality(candidateSet);
+    }
 
-		for (Ballot vote : votes) {
-			Candidate c = vote.computeResults().get(0).getKey();
-			final double value = vote.computeResults().get(0).getValue();
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        Map<Candidate, Double> scorePerCandidate = new HashMap<>();
 
-			scorePerCandidate.merge(c, value, (
-					oldValue, newValue) -> oldValue + newValue);
-		}
+        for (var vote : votes) {
+            Candidate c = vote.computeResults().get(0).getKey();
+            final double value = vote.computeResults().get(0).getValue();
 
-		Candidate result = scorePerCandidate
-				.entrySet()
-				.stream()
-				.sorted((
-						firstEntry, secondEntry) -> Double.compare(firstEntry.getValue(),
-						secondEntry.getValue())).findFirst().get().getKey();
+            scorePerCandidate.merge(c, value, (oldValue, newValue) -> oldValue + newValue);
+        }
 
-		return new ElectionResult(result);
-	}
+        Candidate result = scorePerCandidate
+                .entrySet().stream().sorted((firstEntry, secondEntry) -> Double
+                        .compare(firstEntry.getValue(), secondEntry.getValue()))
+                .findFirst().get().getKey();
+
+        return new ElectionResult(result);
+    }
 
 }

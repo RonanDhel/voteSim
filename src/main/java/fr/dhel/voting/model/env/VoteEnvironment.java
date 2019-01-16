@@ -13,109 +13,105 @@ import fr.dhel.voting.model.entity.voter.Voter;
 import fr.dhel.voting.model.system.VotingSystem;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import lombok.val;
 
 public class VoteEnvironment {
 
-	private final VotingSystem system;
+    private final VotingSystem system;
 
-	private final Set<Candidate> candidateSet;
+    private final Set<Candidate> candidateSet;
 
-	private final List<Voter> voters;
+    private final List<Voter> voters;
 
-	VoteEnvironment(
-			final VotingSystem system, final Set<Candidate> candidateSet, final List<Voter> voters) {
-		if (candidateSet.isEmpty()) {
-			throw new IllegalArgumentException("candidateSet should not be empty");
-		}
-		this.system = Objects.requireNonNull(system, "system should not be null");
-		this.candidateSet = candidateSet;
-		this.voters = Objects.requireNonNull(voters, "voters should not be null");
-	}
+    VoteEnvironment(
+            final VotingSystem system, final Set<Candidate> candidateSet,
+            final List<Voter> voters) {
+        if (candidateSet.isEmpty()) {
+            throw new IllegalArgumentException("candidateSet should not be empty");
+        }
+        this.system = Objects.requireNonNull(system, "system should not be null");
+        this.candidateSet = candidateSet;
+        this.voters = Objects.requireNonNull(voters, "voters should not be null");
+    }
 
-	public static class Builder {
-		private VotingSystem system;
-		private Set<Candidate> candidateSet;
-		private List<Voter> voters;
+    public static class Builder {
+        private VotingSystem system;
+        private Set<Candidate> candidateSet;
+        private List<Voter> voters;
 
-		private Builder() {
-			candidateSet = new HashSet<>();
-		}
+        private Builder() {
+            candidateSet = new HashSet<>();
+        }
 
-		//===================================================================
-		// METHODES
-		//===================================================================
-		
-		public Builder votingSystem(
-				final VotingSystem votingSystem) {
-			this.system = votingSystem;
-			return this;
-		}
+        // ===================================================================
+        // METHODES
+        // ===================================================================
 
-		public Builder candidate(
-				final Candidate candidate) {
-			this.candidateSet.add(candidate);
-			return this;
-		}
+        public Builder votingSystem(final VotingSystem votingSystem) {
+            this.system = votingSystem;
+            return this;
+        }
 
-		public Builder candidateSet(
-				final Set<Candidate> candidateSet) {
-			this.candidateSet = candidateSet;
-			return this;
-		}
+        public Builder candidate(final Candidate candidate) {
+            this.candidateSet.add(candidate);
+            return this;
+        }
 
-		public Builder voters(
-				final List<Voter> voters) {
-			this.voters = voters;
-			return this;
-		}
+        public Builder candidateSet(final Set<Candidate> candidateSet) {
+            this.candidateSet = candidateSet;
+            return this;
+        }
 
-		public VoteEnvironment build() {
-			return new VoteEnvironment(system, candidateSet, voters);
-		}
-	}
+        public Builder voters(final List<Voter> voters) {
+            this.voters = voters;
+            return this;
+        }
 
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	public static Builder builder() {
-		return new Builder();
-	}
+        public VoteEnvironment build() {
+            return new VoteEnvironment(system, candidateSet, voters);
+        }
+    }
 
-	void setup() {
-		// rien à faire
-	}
-	
-	private Set<Candidate> getCandidateSet() {
-		return unmodifiableSet(candidateSet);
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	ElectionResult countVotes(final BallotBuilder builder) {
-		List<Ballot> res = voters.stream().map(v -> v.vote(builder)).collect(toList());
+    public static Builder builder() {
+        return new Builder();
+    }
 
-		return system.countVotes(res, getCandidateSet());
-	}
-	
-	public Candidate countVotesAndComputeElectionResult() {
-		val b = system.createBallot(getCandidateSet());
-		
-		ElectionResult er = countVotes(b);
+    void setup() {
+        // rien à faire
+    }
 
-		while (er.needNextRound()) {
-			er = countVotes(system.createBallot(er.candidatesForNextRound()));
-		}
-		return er.getElectedCandidate();
-	}
+    private Set<Candidate> getCandidateSet() {
+        return unmodifiableSet(candidateSet);
+    }
 
-	public final Candidate electWinner() {
-		setup();
-		return countVotesAndComputeElectionResult();
-	}
+    ElectionResult countVotes(final BallotBuilder builder) {
+        List<Ballot> res = voters.stream().map(v -> v.vote(builder)).collect(toList());
 
-	@Override
-	public String toString() {
-		return "Vote environment using " + system.getClass().getName() + " for candidates ("
-				+ candidateSet + ") with " + voters.size() + " voters";
-	}
+        return system.countVotes(res, getCandidateSet());
+    }
+
+    public Candidate countVotesAndComputeElectionResult() {
+        var b = system.createBallot(getCandidateSet());
+
+        ElectionResult er = countVotes(b);
+
+        while (er.needNextRound()) {
+            er = countVotes(system.createBallot(er.candidatesForNextRound()));
+        }
+        return er.getElectedCandidate();
+    }
+
+    public final Candidate electWinner() {
+        setup();
+        return countVotesAndComputeElectionResult();
+    }
+
+    @Override
+    public String toString() {
+        return "Vote environment using " + system.getClass().getName() + " for candidates ("
+                + candidateSet + ") with " + voters.size() + " voters";
+    }
 }

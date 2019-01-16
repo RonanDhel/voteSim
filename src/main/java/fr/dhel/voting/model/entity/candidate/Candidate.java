@@ -18,36 +18,36 @@ import fr.dhel.voting.model.entity.politicalpos.PoliticalPosition;
  */
 @ToString
 public class Candidate {
-	@Getter
-	private final int id;
-	
-	private final String name;
+    @Getter
+    private final int id;
 
-	@Getter
-	private final PoliticalPosition politicalPosition;
+    private final String name;
 
-	@Getter
-	private final PoliticalSkill politicalSkill;
+    @Getter
+    private final PoliticalPosition politicalPosition;
 
-	public Candidate(
-			final int id, final String name, final PoliticalPosition politicalPosition,
-			final PoliticalSkill politicalSkill) {
-		if (StringUtils.isBlank(name))
-			throw new IllegalArgumentException("name should not be empty");
-		
-		this.id = id;
-		this.name = name;
-		this.politicalPosition = Objects.requireNonNull(politicalPosition,
-				"politicalPosition should not be null");
-		this.politicalSkill = Objects.requireNonNull(politicalSkill,
-				"politicalSkill should not be null");
-	}
+    @Getter
+    private final PoliticalSkill politicalSkill;
 
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	public String name() {
-		return name;
-	}
+    public Candidate(
+            final int id, final String name, final PoliticalPosition politicalPosition,
+            final PoliticalSkill politicalSkill) {
+        if (StringUtils.isBlank(name))
+            throw new IllegalArgumentException("name should not be empty");
+
+        this.id = id;
+        this.name = name;
+        this.politicalPosition = Objects.requireNonNull(politicalPosition,
+                "politicalPosition should not be null");
+        this.politicalSkill = Objects.requireNonNull(politicalSkill,
+                "politicalSkill should not be null");
+    }
+
+    // ===================================================================
+    // METHODES
+    // ===================================================================
+
+    public String name() {
+        return name;
+    }
 }

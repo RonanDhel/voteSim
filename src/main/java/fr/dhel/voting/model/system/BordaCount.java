@@ -24,35 +24,31 @@ import fr.dhel.voting.model.system.ballot.Ballot;
  * </li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * oui
- * </li>
- * <li>gagnant de Condorcet : non
- * </li>
- * <li>perdant de Condorcet : oui
- * </li>
+ * oui</li>
+ * <li>gagnant de Condorcet : non</li>
+ * <li>perdant de Condorcet : oui</li>
  * </ul>
  * 
  * @author Ronan
  *
  */
 public class BordaCount extends RankedVotingSystem {
-	
-	private static final String FULL_NAME = "Borda-count";
-	
-	@Override
-	public String shortName() {
-		return "BC";
-	}
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    private static final String FULL_NAME = "Borda-count";
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		throw new IllegalStateException("not implemented yet");
-	}
+    @Override
+    public String shortName() {
+        return "BC";
+    }
+
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
+
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        throw new IllegalStateException("not implemented yet");
+    }
 
 }

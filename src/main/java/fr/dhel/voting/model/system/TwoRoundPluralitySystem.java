@@ -12,7 +12,6 @@ import fr.dhel.voting.model.entity.candidate.Candidate;
 import fr.dhel.voting.model.env.ElectionResult;
 import fr.dhel.voting.model.system.ballot.Ballot;
 import fr.dhel.voting.model.system.ballot.BallotBuilder;
-import lombok.val;
 
 /**
  * Représente le <i>scrutin uninominal à 2 tour</i>.
@@ -21,7 +20,8 @@ import lombok.val;
  * française sous la Ve république.
  * <p>
  * Il faut voter pour une personne. Celle-ci est élue si elle a 50% des voix ou
- * +, sinon, un second tour est organisé avec les deux meilleurs candidats. <br />
+ * +, sinon, un second tour est organisé avec les deux meilleurs candidats.
+ * <br />
  * Le second tour est gagné par le candidat ayant le plus de voix.
  * <p>
  * Ce système se comporte comme ceci :
@@ -40,65 +40,60 @@ import lombok.val;
  */
 public class TwoRoundPluralitySystem implements VotingSystem {
 
-	private static final String FULL_NAME = "Plurality-2-turn";
+    private static final String FULL_NAME = "Plurality-2-turn";
 
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	@Override
-	public String shortName() {
-		return "PL2";
-	}
+    // ===================================================================
+    // METHODES
+    // ===================================================================
 
-	@Override
-	public String fullName() {
-		return FULL_NAME;
-	}
+    @Override
+    public String shortName() {
+        return "PL2";
+    }
 
-	@Override
-	public boolean isPluralityType() {
-		return true;
-	}
+    @Override
+    public String fullName() {
+        return FULL_NAME;
+    }
 
-	@Override
-	public BallotBuilder createBallot(
-			final Set<Candidate> candidateSet) {
-		return v -> v.visitPlurality(candidateSet);
-	}
+    @Override
+    public boolean isPluralityType() {
+        return true;
+    }
 
-	@Override
-	public ElectionResult countVotes(
-			final List<Ballot> votes, final Set<Candidate> candidateSet) {
-		Map<Candidate, Double> scorePerCandidate = new HashMap<>();
+    @Override
+    public BallotBuilder createBallot(final Set<Candidate> candidateSet) {
+        return v -> v.visitPlurality(candidateSet);
+    }
 
-		for (Ballot vote : votes) {
-			Candidate c = vote.computeResults().get(0).getKey();
-			final double value = vote.computeResults().get(0).getValue();
+    @Override
+    public ElectionResult countVotes(final List<Ballot> votes, final Set<Candidate> candidateSet) {
+        Map<Candidate, Double> scorePerCandidate = new HashMap<>();
 
-			scorePerCandidate.merge(c, value, (
-					oldValue, newValue) -> oldValue + newValue);
-		}
+        for (Ballot vote : votes) {
+            Candidate c = vote.computeResults().get(0).getKey();
+            final double value = vote.computeResults().get(0).getValue();
 
-		val sortedResult = scorePerCandidate
-				.entrySet()
-				.stream()
-				.sorted((
-						firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
-						firstEntry.getValue())).collect(toList());
+            scorePerCandidate.merge(c, value, (oldValue, newValue) -> oldValue + newValue);
+        }
 
-		val bestCandidateWithScore = sortedResult.get(0);
-		
-		int numberOfVoteToBeElected = (votes.size() + 1) / 2;
-		if (bestCandidateWithScore.getValue() >= numberOfVoteToBeElected) {
-			return new ElectionResult(bestCandidateWithScore.getKey());
-		}
-		
-		val bestTwo = new HashSet<Candidate>();
-		bestTwo.add(sortedResult.get(0).getKey());
-		bestTwo.add(sortedResult.get(1).getKey());
-		
-		return ElectionResult.electionWithNewRound(bestTwo);
-	}
+        var sortedResult = scorePerCandidate.entrySet().stream()
+                .sorted((firstEntry, secondEntry) -> Double.compare(secondEntry.getValue(),
+                        firstEntry.getValue()))
+                .collect(toList());
+
+        var bestCandidateWithScore = sortedResult.get(0);
+
+        int numberOfVoteToBeElected = (votes.size() + 1) / 2;
+        if (bestCandidateWithScore.getValue() >= numberOfVoteToBeElected) {
+            return new ElectionResult(bestCandidateWithScore.getKey());
+        }
+
+        var bestTwo = new HashSet<Candidate>();
+        bestTwo.add(sortedResult.get(0).getKey());
+        bestTwo.add(sortedResult.get(1).getKey());
+
+        return ElectionResult.electionWithNewRound(bestTwo);
+    }
 
 }

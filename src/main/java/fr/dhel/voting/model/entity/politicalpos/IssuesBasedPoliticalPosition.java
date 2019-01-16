@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import lombok.Getter;
 import lombok.ToString;
-import lombok.val;
 import fr.dhel.voting.model.entity.candidate.Candidate;
 
 /**
@@ -21,28 +20,27 @@ import fr.dhel.voting.model.entity.candidate.Candidate;
  */
 @ToString @Getter
 public class IssuesBasedPoliticalPosition implements PoliticalPosition {
-	private final Issues issues;
-	
-	public IssuesBasedPoliticalPosition(final Issues issues) {
-		this.issues = Objects.requireNonNull(issues, "issues should not be null");
-	}
-	
-	//===================================================================
-	// METHODES
-	//===================================================================
-	
-	@Override
-	public BigDecimal utility(final Candidate candidate) {
-		if (candidate.getPoliticalPosition() instanceof IssuesBasedPoliticalPosition) {
-			val other = (IssuesBasedPoliticalPosition) candidate.getPoliticalPosition();
-			val distance = issues.getDistanceFrom(other.getIssues());
-			
-			double distanceAsDouble = distance.doubleValue();
-			
-			return BigDecimal.valueOf(Math.exp(-distanceAsDouble));
-			
-		}
-		return BigDecimal.ZERO;
-	}
-	
+    private final Issues issues;
+
+    public IssuesBasedPoliticalPosition(final Issues issues) {
+        this.issues = Objects.requireNonNull(issues, "issues should not be null");
+    }
+
+    // ===================================================================
+    // METHODES
+    // ===================================================================
+
+    @Override
+    public BigDecimal utility(final Candidate candidate) {
+        if (candidate.getPoliticalPosition() instanceof IssuesBasedPoliticalPosition) {
+            var other = (IssuesBasedPoliticalPosition) candidate.getPoliticalPosition();
+            var distance = issues.getDistanceFrom(other.getIssues());
+
+            var distanceAsDouble = distance.doubleValue();
+
+            return BigDecimal.valueOf(Math.exp(-distanceAsDouble));
+        }
+        return BigDecimal.ZERO;
+    }
+
 }
