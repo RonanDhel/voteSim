@@ -40,7 +40,7 @@ import fr.dhel.voting.model.system.ballot.BallotBuilder;
  * nécessairement mais en général oui</li>
  * <li>critère de participation (ajouter un bulletin où le candidat A est
  * préféré ne doit pas changer le résultat du candidat A vers le candidat B) :
- * non</li>
+ * oui</li>
  * <li>gagnant de Condorcet : non</li>
  * <li>perdant de Condorcet : non</li>
  * </ul>
